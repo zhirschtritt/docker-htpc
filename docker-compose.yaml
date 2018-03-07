@@ -1,0 +1,73 @@
+version: '3'
+services:
+  Plex:
+    image: linuxserver/plex
+    environment:
+      PGID: '1000'
+      PUID: '1000'
+      TZ: America/New_York
+      VERSION: latest
+    stdin_open: true
+    volumes:
+    - $EXTERNAL_HD/config:/config
+    - $EXTERNAL_HD/Media/tvshows:/data/tvshows
+    - $EXTERNAL_HD/Media/movies:/data/movies
+    - $EXTERNAL_HD/Media/plex:/transcode
+    tty: true
+    ports:
+    - 32400:32400/tcp
+    - 32400:32400/udp
+    - 32469:32469
+    - 32469:32469/udp
+    - 5353:5353/udp
+    - 1900:1900/udp
+    restart: unless-stopped
+
+  CouchPotato:
+    image: linuxserver/couchpotato
+    environment:
+      PGID: '1000'
+      PUID: '1000'
+      TZ: America/New_York
+    stdin_open: true
+    volumes:
+    - $EXTERNAL_HD/config:/config
+    - $EXTERNAL_HD/couchpotato:/downloads
+    - $EXTERNAL_HD/Media/movies:/movies
+    tty: true
+    ports:
+    - 5050:5050/tcp
+    restart: unless-stopped
+
+  Sonarr:
+    image: linuxserver/sonarr
+    environment:
+      PGID: '1000'
+      PUID: '1000'
+      TZ: America/New_York
+    stdin_open: true
+    volumes:
+    - /etc/localtime:/etc/localtime:ro
+    - $EXTERNAL_HD/config:/config
+    - $EXTERNAL_HD/sonarr:/downloads
+    - $EXTERNAL_HD/Media/tv:/tv
+    tty: true
+    ports:
+    - 8989:8989
+    restart: unless-stopped
+
+  Transmission:
+    image: linuxserver/transmission
+    environment:
+      PGID: '1000'
+      PUID: '1000'
+      TZ: America/New_York
+    stdin_open: true
+    volumes:
+    - $EXTERNAL_HD/config:/config
+    - $EXTERNAL_HD/transmission:/downloads
+    - $EXTERNAL_HD/transmission/watch:/watch
+    ports:
+    - 9091:9091
+    - 51413:51413
+    - 51413:51413/udp
