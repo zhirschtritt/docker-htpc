@@ -4,33 +4,33 @@ services:
     image: emby/embyserver
     container_name: emby
     ports:
-        - 8096:8096
-        - 8920:8920
+      - 8096:8096
+      - 8920:8920
     volumes:
-        - /etc/localtime:/etc/localtime:ro
-        - $EXTERNAL_HD/.config/embyserver:/config
-        - $EXTERNAL_HD/Media:/media
-        - /dev/dri/renderD128
+      - /etc/localtime:/etc/localtime:ro
+      - $EXTERNAL_HD/.config/embyserver:/config
+      - $EXTERNAL_HD/Media:/media
+      - /dev/dri/renderD128
     environment:
-        - VIRTUAL_PORT=8096
-        - VIRTUAL_HOST=emby.htpc
-        - AUTO_UPDATES_ON=true
-        - APP_UID=1000
-        - APP_GID=1000
-        - GIDLIST=100,44
+      - AUTO_UPDATES_ON: 'true'
+      - APP_UID: '1000'
+      - APP_GID: '1000'
+      - GIDLIST: 100,4
+    restart: unless-stopped
 
   Dashboard:
-    image: chimpchimp/manage-this-node
-    container_name: dashboard
-    ports:
-        - 3000:3000
-    volumes:
-        - $EXTERNAL_HD/.config/dashboard:/config
-    restart: always
+    image: linuxserver/muximux
+    container_name: muximux
     environment:
-        - VIRTUAL_HOST=dashboard.htpc
-        - PGID=1000
-        - PUID=1000
+      PGID: '1000'
+      PUID;: '1000'
+      TZ: America/New_York
+    ports:
+    - 80:80
+    volumes:
+    - $EXTERNAL_HD/.config/muximux:/config
+    restart: unless-stopped
+
 
   CouchPotato:
     image: linuxserver/couchpotato
