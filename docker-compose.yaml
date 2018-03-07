@@ -1,27 +1,36 @@
 version: '3'
 services:
-  Plex:
-    image: linuxserver/plex
-    environment:
-      PGID: '1000'
-      PUID: '1000'
-      TZ: America/New_York
-      VERSION: latest
-    stdin_open: true
-    volumes:
-    - $EXTERNAL_HD/config:/config
-    - $EXTERNAL_HD/Media/tvshows:/data/tvshows
-    - $EXTERNAL_HD/Media/movies:/data/movies
-    - $EXTERNAL_HD/Media/plex:/transcode
-    tty: true
+  Emby:
+    image: emby/embyserver
+    container_name: emby
     ports:
-    - 32400:32400/tcp
-    - 32400:32400/udp
-    - 32469:32469
-    - 32469:32469/udp
-    - 5353:5353/udp
-    - 1900:1900/udp
-    restart: unless-stopped
+        - 8096:8096
+        - 8920:8920
+    volumes:
+        - /etc/localtime:/etc/localtime:ro
+        - $EXTERNAL_HD/.config/embyserver:/config
+        - $EXTERNAL_HD/Media:/media
+        - /dev/dri/renderD128
+    environment:
+        - VIRTUAL_PORT=8096
+        - VIRTUAL_HOST=emby.htpc
+        - AUTO_UPDATES_ON=true
+        - APP_UID=1000
+        - APP_GID=1000
+        - GIDLIST=100,44
+
+  Dashboard:
+    image: chimpchimp/manage-this-node
+    container_name: dashboard
+    ports:
+        - 3000:3000
+    volumes:
+        - $EXTERNAL_HD/.config/dashboard:/config
+    restart: always
+    environment:
+        - VIRTUAL_HOST=dashboard.htpc
+        - PGID=1000
+        - PUID=1000
 
   CouchPotato:
     image: linuxserver/couchpotato
@@ -31,9 +40,9 @@ services:
       TZ: America/New_York
     stdin_open: true
     volumes:
-    - $EXTERNAL_HD/config:/config
+    - $EXTERNAL_HD/.config/couchpotato:/config
     - $EXTERNAL_HD/couchpotato:/downloads
-    - $EXTERNAL_HD/Media/movies:/movies
+    - $EXTERNAL_HD/Media/movies:/media/movies
     tty: true
     ports:
     - 5050:5050/tcp
@@ -48,9 +57,9 @@ services:
     stdin_open: true
     volumes:
     - /etc/localtime:/etc/localtime:ro
-    - $EXTERNAL_HD/config:/config
+    - $EXTERNAL_HD/.config/sonarr:/config
     - $EXTERNAL_HD/sonarr:/downloads
-    - $EXTERNAL_HD/Media/tv:/tv
+    - $EXTERNAL_HD/Media/tv:/media/tv
     tty: true
     ports:
     - 8989:8989
@@ -64,8 +73,8 @@ services:
       TZ: America/New_York
     stdin_open: true
     volumes:
-    - $EXTERNAL_HD/config:/config
-    - $EXTERNAL_HD/transmission:/downloads
+    - $EXTERNAL_HD/.config/transmission:/config
+    - $EXTERNAL_HD/transmission:/media/downloads
     - $EXTERNAL_HD/transmission/watch:/watch
     ports:
     - 9091:9091
