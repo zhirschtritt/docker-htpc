@@ -12,18 +12,18 @@ services:
       - $EXTERNAL_HD/media:/media
       - /dev/dri/renderD128
     environment:
-      APP_UID=1000
-      APP_GID=1000
-      GIDLIST=100,4
+      - APP_UID=1000
+      - APP_GID=1000
+      - GIDLIST=100,4
     restart: unless-stopped
 
   Dashboard:
     image: linuxserver/muximux
     container_name: muximux
     environment:
-      PGID=1000
-      PUID=1000
-      TZ=America/New_York
+      PGID: '1000'
+      PUID: '1000'
+      TZ: America/New_York
     ports:
     - 80:80
     volumes:
@@ -34,9 +34,9 @@ services:
   CouchPotato:
     image: linuxserver/couchpotato
     environment:
-      PGID=1000
-      PUID=1000
-      TZ=America/New_York
+      PGID: '1000'
+      PUID: '1000'
+      TZ: America/New_York
     stdin_open: true
     volumes:
     - $EXTERNAL_HD/couchpotato:/config
@@ -50,9 +50,9 @@ services:
   Sonarr:
     image: linuxserver/sonarr
     environment:
-      PGID=1000
-      PUID=1000
-      TZ=America/New_York
+      PGID: '1000'
+      PUID: '1000'
+      TZ: America/New_York
     stdin_open: true
     volumes:
     - /etc/localtime:/etc/localtime:ro
@@ -67,13 +67,13 @@ services:
   Transmission:
     image: linuxserver/transmission
     environment:
-      PGID=1000
-      PUID=1000
-      TZ=America/New_York
+      PGID: '1000'
+      PUID: '1000'
+      TZ: America/New_York
     stdin_open: true
     volumes:
     - $EXTERNAL_HD/transmission:/config
-    - $EXTERNAL_HD/downloads:/media/downloads
+    - $EXTERNAL_HD/dowloads:/media/downloads
     - $EXTERNAL_HD/transmission/watch:/watch
     ports:
     - 9091:9091
