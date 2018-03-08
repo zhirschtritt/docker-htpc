@@ -8,14 +8,14 @@ services:
       - 8920:8920
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $EXTERNAL_HD/.config/embyserver:/config
-      - $EXTERNAL_HD/Media:/media
+      - $EXTERNAL_HD/emby:/config
+      - $EXTERNAL_HD/media:/media
       - /dev/dri/renderD128
     environment:
       - AUTO_UPDATES_ON: 'true'
-      - APP_UID: '1000'
-      - APP_GID: '1000'
-      - GIDLIST: 100,4
+      - APP_UID=1000
+      - APP_GID=1000
+      - GIDLIST=100,4
     restart: unless-stopped
 
   Dashboard:
@@ -23,12 +23,12 @@ services:
     container_name: muximux
     environment:
       PGID: '1000'
-      PUID;: '1000'
+      PUID: '1000'
       TZ: America/New_York
     ports:
     - 80:80
     volumes:
-    - $EXTERNAL_HD/.config/muximux:/config
+    - $EXTERNAL_HD/muximux:/config
     restart: unless-stopped
 
 
@@ -40,9 +40,9 @@ services:
       TZ: America/New_York
     stdin_open: true
     volumes:
-    - $EXTERNAL_HD/.config/couchpotato:/config
-    - $EXTERNAL_HD/couchpotato:/downloads
-    - $EXTERNAL_HD/Media/movies:/media/movies
+    - $EXTERNAL_HD/couchpotato:/config
+    - $EXTERNAL_HD/downloads:/downloads
+    - $EXTERNAL_HD/media/movies:/movies
     tty: true
     ports:
     - 5050:5050/tcp
@@ -57,9 +57,9 @@ services:
     stdin_open: true
     volumes:
     - /etc/localtime:/etc/localtime:ro
-    - $EXTERNAL_HD/.config/sonarr:/config
-    - $EXTERNAL_HD/sonarr:/downloads
-    - $EXTERNAL_HD/Media/tv:/media/tv
+    - $EXTERNAL_HD/sonarr:/config
+    - $EXTERNAL_HD/downloads:/downloads
+    - $EXTERNAL_HD/media/tv:/tv
     tty: true
     ports:
     - 8989:8989
@@ -73,8 +73,8 @@ services:
       TZ: America/New_York
     stdin_open: true
     volumes:
-    - $EXTERNAL_HD/.config/transmission:/config
-    - $EXTERNAL_HD/transmission:/media/downloads
+    - $EXTERNAL_HD/transmission:/config
+    - $EXTERNAL_HD/downloads:/media/downloads
     - $EXTERNAL_HD/transmission/watch:/watch
     ports:
     - 9091:9091
