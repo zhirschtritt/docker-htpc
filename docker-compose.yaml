@@ -10,6 +10,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - $EXTERNAL_HD/emby:/config
       - $EXTERNAL_HD/media:/media
+      - $EXTERNAL_HD/downloads:/downloads
       - /dev/dri/renderD128
     environment:
       - APP_UID=1000
