@@ -75,8 +75,30 @@ services:
     volumes:
     - $EXTERNAL_HD/transmission:/config
     - $EXTERNAL_HD/downloads:/downloads
+    - $EXTERNAL_HD/media/movies:/movies
+    - $EXTERNAL_HD/media/tv:/tv
     - $EXTERNAL_HD/transmission/watch:/watch
     ports:
     - 9091:9091
     - 51413:51413
     - 51413:51413/udp
+
+  Deluge:
+    image: linuxserver/deluge
+    environment:
+      PGID: '1000'
+      PUID: '1000'
+      TZ: America/New_York
+    stdin_open: true
+    volumes:
+    - $EXTERNAL_HD/deluge:/config
+    - $EXTERNAL_HD/downloads:/downloads
+    - $EXTERNAL_HD/media/movies:/movies
+    - $EXTERNAL_HD/media/tv:/tv
+    - $EXTERNAL_HD/deluge/watch:/watch
+    ports:
+    - 58846:58846
+    - 8112:8112
+    expose:
+    - "53160"
+    - "53160/udp"
