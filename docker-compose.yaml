@@ -60,6 +60,7 @@ services:
     - $EXTERNAL_HD/sonarr:/config
     - $EXTERNAL_HD/downloads:/downloads
     - $EXTERNAL_HD/media/tv:/tv
+    - $EXTERNAL_HD/media:/media
     tty: true
     ports:
     - 8989:8989
