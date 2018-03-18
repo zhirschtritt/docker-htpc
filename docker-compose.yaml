@@ -7,14 +7,13 @@ services:
       - 8096:8096
       - 8920:8920
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       - $EXTERNAL_HD/emby:/config
       - $EXTERNAL_HD/media:/media
       - $EXTERNAL_HD/downloads:/downloads
       - /dev/dri/renderD128
     environment:
-      - APP_UID=1000
-      - APP_GID=1000
+      - APP_UID=$UID
+      - APP_GID=$GID
       - GIDLIST=100,4
     restart: unless-stopped
 
@@ -22,8 +21,8 @@ services:
     image: linuxserver/muximux
     container_name: muximux
     environment:
-      PGID: '1000'
-      PUID: '1000'
+      PGID: $GID
+      PUID: $UID
       TZ: America/New_York
     ports:
     - 80:80
@@ -32,11 +31,11 @@ services:
     restart: unless-stopped
 
 
-  CouchPotato:
-    image: linuxserver/couchpotato
+  Radarr:
+    image: linuxserver/radarr
     environment:
-      PGID: '1000'
-      PUID: '1000'
+      PGID: $GID
+      PUID: $UID
       TZ: America/New_York
     stdin_open: true
     volumes:
@@ -45,18 +44,17 @@ services:
     - $EXTERNAL_HD/media/movies:/movies
     tty: true
     ports:
-    - 5050:5050/tcp
+    - 7878:7878
     restart: unless-stopped
 
   Sonarr:
     image: linuxserver/sonarr
     environment:
-      PGID: '1000'
-      PUID: '1000'
+      PGID: $GID
+      PUID: $UID
       TZ: America/New_York
     stdin_open: true
     volumes:
-    - /etc/localtime:/etc/localtime:ro
     - $EXTERNAL_HD/sonarr:/config
     - $EXTERNAL_HD/downloads:/downloads
     - $EXTERNAL_HD/media/tv:/tv
@@ -69,8 +67,8 @@ services:
   Transmission:
     image: linuxserver/transmission
     environment:
-      PGID: '1000'
-      PUID: '1000'
+      PGID: $GID
+      PUID: $UID
       TZ: America/New_York
     stdin_open: true
     volumes:
@@ -87,8 +85,8 @@ services:
   Deluge:
     image: linuxserver/deluge
     environment:
-      PGID: '1000'
-      PUID: '1000'
+      PGID: $GID
+      PUID: $UID
       TZ: America/New_York
     stdin_open: true
     volumes:
