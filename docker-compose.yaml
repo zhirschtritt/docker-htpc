@@ -9,10 +9,12 @@ services:
   db:
     image: postgres
     restart: always
+    ports:
+      - 15432:15432
     environment:
       POSTGRES_PASSWORD: $DB_PASS
       POSTGRES_USER: $DB_USER
-      
+
   Nextcloud:
     image: linuxserver/nextcloud
     container_name: nextcloud
