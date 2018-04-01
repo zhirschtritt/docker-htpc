@@ -1,5 +1,28 @@
 version: '3'
 services:
+  Mount:
+    image: alpine
+    container_name: mount
+    tty: true
+    command: mount /dev/sdb2 /media/butt/WDHD1
+
+  Syncthing:
+    image: linuxserver/syncthing
+    container_name: syncthing
+    ports:
+      - 8384:8384
+      - 22000:22000
+      - 21027:21027/udp
+    depends_on:
+      - Mount
+    environment:
+      PGID: $GID
+      PUID: $UID
+    volumes:
+      - $EXTERNAL_HD/syncthing:/config
+      - $EXTERNAL_HD/media:/media
+    restart: unless-stopped
+
   Emby:
     image: emby/embyserver
     container_name: emby
@@ -15,6 +38,8 @@ services:
       - APP_UID=$UID
       - APP_GID=$GID
       - GIDLIST=100,4
+    depends_on:
+      - Mount
     restart: unless-stopped
 
   Dashboard:
@@ -25,11 +50,12 @@ services:
       PUID: $UID
       TZ: America/New_York
     ports:
-    - 80:80
+      - 80:80
     volumes:
-    - $EXTERNAL_HD/muximux:/config
+      - $EXTERNAL_HD/muximux:/config
+    depends_on:
+      - Mount
     restart: unless-stopped
-
 
   Radarr:
     image: linuxserver/radarr
@@ -39,12 +65,14 @@ services:
       TZ: America/New_York
     stdin_open: true
     volumes:
-    - $EXTERNAL_HD/radarr:/config
-    - $EXTERNAL_HD/downloads:/downloads
-    - $EXTERNAL_HD/media/movies:/movies
+      - $EXTERNAL_HD/radarr:/config
+      - $EXTERNAL_HD/downloads:/downloads
+      - $EXTERNAL_HD/media/movies:/movies
     tty: true
     ports:
-    - 7878:7878
+      - 7878:7878
+    depends_on:
+      - Mount
     restart: unless-stopped
 
   Sonarr:
@@ -55,32 +83,16 @@ services:
       TZ: America/New_York
     stdin_open: true
     volumes:
-    - $EXTERNAL_HD/sonarr:/config
-    - $EXTERNAL_HD/downloads:/downloads
-    - $EXTERNAL_HD/media/tv:/tv
-    - $EXTERNAL_HD/media:/media
+      - $EXTERNAL_HD/sonarr:/config
+      - $EXTERNAL_HD/downloads:/downloads
+      - $EXTERNAL_HD/media/tv:/tv
+      - $EXTERNAL_HD/media:/media
     tty: true
+    depends_on:
+      - Mount
     ports:
-    - 8989:8989
+      - 8989:8989
     restart: unless-stopped
-
-  Transmission:
-    image: linuxserver/transmission
-    environment:
-      PGID: $GID
-      PUID: $UID
-      TZ: America/New_York
-    stdin_open: true
-    volumes:
-    - $EXTERNAL_HD/transmission:/config
-    - $EXTERNAL_HD/downloads:/downloads
-    - $EXTERNAL_HD/media/movies:/movies
-    - $EXTERNAL_HD/media/tv:/tv
-    - $EXTERNAL_HD/transmission/watch:/watch
-    ports:
-    - 9091:9091
-    - 51413:51413
-    - 51413:51413/udp
 
   Deluge:
     image: linuxserver/deluge
@@ -90,14 +102,17 @@ services:
       TZ: America/New_York
     stdin_open: true
     volumes:
-    - $EXTERNAL_HD/deluge:/config
-    - $EXTERNAL_HD/downloads:/downloads
-    - $EXTERNAL_HD/media/movies:/movies
-    - $EXTERNAL_HD/media/tv:/tv
-    - $EXTERNAL_HD/deluge/watch:/watch
+      - $EXTERNAL_HD/deluge:/config
+      - $EXTERNAL_HD/downloads:/downloads
+      - $EXTERNAL_HD/media/movies:/movies
+      - $EXTERNAL_HD/media/tv:/tv
+      - $EXTERNAL_HD/deluge/watch:/watch
     ports:
-    - 58846:58846
-    - 8112:8112
+      - 58846:58846
+      - 8112:8112
+    depends_on:
+      - Mount
     expose:
-    - "53160"
-    - "53160/udp"
+      - "53160"
+      - "53160/udp"
+    restart: unless-stopped
