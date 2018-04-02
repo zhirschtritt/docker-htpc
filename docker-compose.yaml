@@ -6,30 +6,18 @@ services:
     tty: true
     command: mount /dev/sdb2 /media/butt/WDHD1
 
-  db:
-    image: postgres
-    restart: always
+  nginx:
+    image: tiagoad/nginx-index
+    container_name: nginx
     ports:
-      - 15432:5432
-    environment:
-      POSTGRES_PASSWORD: $DB_PASS
-      POSTGRES_USER: $DB_USER
-
-  Nextcloud:
-    image: linuxserver/nextcloud
-    container_name: nextcloud
-    ports:
-      - 443:443
-    links:
-      - db
+      - 8080:80
     depends_on:
       - Mount
     environment:
       PGID: $GID
       PUID: $UID
     volumes:
-      - $EXTERNAL_HD/nextcloud:/config
-      - $EXTERNAL_HD/media:/data
+      - $EXTERNAL_HD/media:http/media
     restart: unless-stopped
 
   Emby:
