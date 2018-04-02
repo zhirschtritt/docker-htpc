@@ -17,7 +17,7 @@ services:
       PGID: $GID
       PUID: $UID
     volumes:
-      - $EXTERNAL_HD/media:/http/media
+      - $EXTERNAL_HD/media/:/http/media
     restart: unless-stopped
 
   Emby:
