@@ -7,7 +7,7 @@ services:
     command: mount /dev/sdb2 /media/butt/WDHD1
 
   nginx:
-    image: tiagoad/nginx-index
+    build: ./nginx
     container_name: nginx
     ports:
       - 8080:80
@@ -17,7 +17,7 @@ services:
       PGID: $GID
       PUID: $UID
     volumes:
-      - $EXTERNAL_HD/media/:/http/media
+      - $EXTERNAL_HD/media:/http/media
     restart: unless-stopped
 
   Emby:
