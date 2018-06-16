@@ -6,20 +6,24 @@ services:
     tty: true
     command: mount /dev/sdb2 /media/butt/WDHD1
 
-  nginx:
-    build: ./nginx
-    container_name: nginx
+  Resilio:
+    image: linuxserver/resilio-sync
+    container_name: resilio
     ports:
-      - 8080:80
-    depends_on:
-      - Mount
+      - 8888:8888
+      - 55555:55555
+    volumes:
+      - $EXTERNAL_HD/resilio:/config
+      - $EXTERNAL_HD/media:/sync
+      - $EXTERNAL_HD/resilio/downloads:/downloads
     environment:
       PGID: $GID
       PUID: $UID
-    volumes:
-      - $EXTERNAL_HD/media:/http/allthethings
+      TZ: America/New_York
+    depends_on:
+      - Mount
     restart: unless-stopped
-
+    
   Emby:
     image: emby/embyserver
     container_name: emby
