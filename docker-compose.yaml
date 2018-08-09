@@ -4,7 +4,7 @@ services:
     image: alpine
     container_name: mount
     tty: true
-    command: mount /dev/sdb2 /media/butt/WDHD1
+    command: mount /media/butt/WDHD1
 
   Resilio:
     image: linuxserver/resilio-sync
