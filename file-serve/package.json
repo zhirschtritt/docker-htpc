@@ -11,6 +11,6 @@
   "license": "ISC",
   "dependencies": {
     "ngrok": "^3.0.1",
-    "serve": "^6.5.7"
+    "serve": "^9.4.2"
   }
 }
