@@ -1,29 +1,5 @@
 version: '3'
 services:
-  Mount:
-    image: alpine
-    container_name: mount
-    tty: true
-    command: mount /media/butt/WDHD1
-
-  Resilio:
-    image: linuxserver/resilio-sync
-    container_name: resilio
-    ports:
-      - 8888:8888
-      - 55555:55555
-    volumes:
-      - $EXTERNAL_HD/resilio:/config
-      - $EXTERNAL_HD/media:/sync
-      - $EXTERNAL_HD/resilio/downloads:/downloads
-    environment:
-      PGID: $GID
-      PUID: $UID
-      TZ: America/New_York
-    depends_on:
-      - Mount
-    restart: unless-stopped
-    
   Emby:
     image: emby/embyserver
     container_name: emby
@@ -38,9 +14,8 @@ services:
     environment:
       - APP_UID=$UID
       - APP_GID=$GID
+      - UNMASK=002
       - GIDLIST=100,4
-    depends_on:
-      - Mount
     restart: unless-stopped
 
   Dashboard:
@@ -49,13 +24,12 @@ services:
     environment:
       PGID: $GID
       PUID: $UID
+      UNMASK: 022
       TZ: America/New_York
     ports:
-      - 80:80
+      - 8000:80
     volumes:
       - $EXTERNAL_HD/muximux:/config
-    depends_on:
-      - Mount
     restart: unless-stopped
 
   Radarr:
@@ -64,6 +38,7 @@ services:
     environment:
       PGID: $GID
       PUID: $UID
+      UNMASK: 022
       TZ: America/New_York
     stdin_open: true
     volumes:
@@ -73,8 +48,6 @@ services:
     tty: true
     ports:
       - 7878:7878
-    depends_on:
-      - Mount
     restart: unless-stopped
 
   Sonarr:
@@ -83,6 +56,7 @@ services:
     environment:
       PGID: $GID
       PUID: $UID
+      UNMASK: 022
       TZ: America/New_York
     stdin_open: true
     volumes:
@@ -91,8 +65,6 @@ services:
       - $EXTERNAL_HD/media/tv:/tv
       - $EXTERNAL_HD/media:/media
     tty: true
-    depends_on:
-      - Mount
     ports:
       - 8989:8989
     restart: unless-stopped
@@ -103,6 +75,7 @@ services:
     environment:
       PGID: $GID
       PUID: $UID
+      UNMASK: 022
       TZ: America/New_York
     stdin_open: true
     volumes:
@@ -114,8 +87,6 @@ services:
     ports:
       - 58846:58846
       - 8112:8112
-    depends_on:
-      - Mount
     expose:
       - "53160"
       - "53160/udp"
